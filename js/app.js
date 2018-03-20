@@ -1,5 +1,5 @@
 let camera, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
-
+console.log('works');
 function init(){
 	// Create Renderer
 	renderer = new THREE.WebGLRenderer();
