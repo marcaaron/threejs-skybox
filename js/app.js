@@ -102,10 +102,11 @@ function initMeshes(){
 					child.receiveShadow = false;
 					console.log(child);
 					var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
-					// geometry.computeFaceNormals();
-					// geometry.mergeVertices();
-					// geometry.computeVertexNormals();
+					geometry.computeFaceNormals();
+					geometry.mergeVertices();
+					geometry.computeVertexNormals(true);
 					child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
+
 	            }
 
 	        });
