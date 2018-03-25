@@ -1,4 +1,4 @@
-let camera, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
+let camera, contols, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
 console.log('works');
 function init(){
 	// Create Renderer
@@ -20,11 +20,14 @@ function init(){
 	const far = 1000;
 	camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 
+	// Crete device orientation controls
+	controls = new THREE.DeviceOrientationControls( camera );
+
 	// Set the Camera Position
 	camera.position.set( 0, 0, 1 );
-	const controls = new THREE.OrbitControls( camera );
-	controls.enableZoom = false;
-	controls.enablePan = false;
+	// const controls = new THREE.OrbitControls( camera );
+	// controls.enableZoom = false;
+	// controls.enablePan = false;
 
 	console.log(controls);
 
