@@ -1,9 +1,11 @@
-if (navigator.geolocation) {
-  alert('Geolocation is supported!');
-}
-else {
-  alert('Geolocation is not supported for this Browser/OS.');
-}
+// if (navigator.geolocation) {
+//   alert('Geolocation is supported!');
+// }
+// else {
+//   alert('Geolocation is not supported for this Browser/OS.');
+// }
+
+
 
 let camera, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
 console.log('works');
@@ -155,6 +157,15 @@ window.addEventListener('resize', onWindowResize);
 init();
 initMeshes();
 animate();
+
+function geo_success(position){
+	updateLocation(position.coords.latitude, position.coords.longitude);
+}
+
+window.onload = function() {
+  navigator.geolocation.getCurrentPosition(geo_success);
+};
+
 const userInfo = document.querySelector('.user-location');
 function updateLocation(lat,long){
 	console.log(lat,long);
@@ -170,10 +181,6 @@ var geo_options = {
   maximumAge        : 30000,
   timeout           : 27000
 };
-
-function geo_success(position){
-	updateLocation(position.coords.latitude, position.coords.longitude);
-}
 
 navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
 
