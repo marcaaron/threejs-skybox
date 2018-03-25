@@ -171,13 +171,13 @@ function updateLocation(lat,long){
 	if(latStart!==lat){
 		latitude = latStart - lat;
 		if(latitude && camera.position.z < 150 && camera.position.z > -150){
-			camera.position.z = latitude*5;
+			camera.position.z = latitude*100;
 		}
 	}
 	if(longStart!==long){
 		longitude = longStart-long;
 		if(longitude && camera.position.z < 150 && camera.position.z > -150){
-			camera.position.z = longitude*5;
+			camera.position.z = longitude*100;
 		}
 	}
 }
