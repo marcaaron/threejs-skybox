@@ -7,7 +7,7 @@
 
 
 
-let camera, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
+let camera, projector, mouseVector, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4, raycaster;
 console.log('works');
 function init(){
 	// Create Renderer
@@ -37,6 +37,7 @@ function init(){
 	// const controls = new THREE.OrbitControls( camera );
 	// controls.enableZoom = false;
 	// controls.enablePan = false;
+	camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
 	console.log(controls);
 	console.log(camera);
@@ -57,27 +58,34 @@ function init(){
 }
 
 function initMeshes(){
-	const cubeGeometry = new THREE.BoxBufferGeometry(500,500,500);
-	var cubeMaterials = [
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/front.png"), side: THREE.DoubleSide}),
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/back.png"), side: THREE.DoubleSide}),
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/up.png"), side: THREE.DoubleSide}),
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/down.png"), side: THREE.DoubleSide}),
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/right.png"), side: THREE.DoubleSide}),
-		new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/left.png"), side: THREE.DoubleSide}),
-	];
-	const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterials)
-	cubeMesh.receiveShadow = true;
-	scene.add(cubeMesh);
+	// const cubeGeometry = new THREE.BoxBufferGeometry(500,500,500);
+	// var cubeMaterials = [
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/front.png"), side: THREE.DoubleSide}),
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/back.png"), side: THREE.DoubleSide}),
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/up.png"), side: THREE.DoubleSide}),
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/down.png"), side: THREE.DoubleSide}),
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/right.png"), side: THREE.DoubleSide}),
+	// 	new THREE.MeshBasicMaterial({map: new THREE.TextureLoader().load("img/Skybox/left.png"), side: THREE.DoubleSide}),
+	// ];
+	// const cubeMesh = new THREE.Mesh(cubeGeometry, cubeMaterials)
+	// cubeMesh.receiveShadow = true;
+	// scene.add(cubeMesh);
+
+	scene.background = new THREE.CubeTextureLoader()
+	.setPath( 'img/Skybox/' )
+	.load( [ 'front.png', 'back.png', 'up.png', 'down.png', 'right.png', 'left.png' ] );
+
 
 	var texture = new THREE.TextureLoader().load( 'textures/Stone_5_DiffuseMap.jpg' );
-	var material = new THREE.MeshBasicMaterial( { map: texture } );
+	var materialTexture = new THREE.MeshBasicMaterial( { map: texture } );
+	var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: scene.background } );
 	var loader = new THREE.OBJLoader();
 
 	loader.load(
 		// resource URL
 		'models/Stone Pack1_Stone_5.obj',
 		// called when resource is loaded
+
 		function ( object ) {
 			object.translateZ( -100 );
 			object.translateY( 0 );
@@ -88,9 +96,16 @@ function initMeshes(){
 			object.traverse(function (child) {
 
 	            if (child instanceof THREE.Mesh) {
-	                child.material.map = texture;
+	                // child.material.map = texture;
+					child.material = material;
 			        child.castShadow = true;
 					child.receiveShadow = false;
+					console.log(child);
+					var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
+					// geometry.computeFaceNormals();
+					// geometry.mergeVertices();
+					// geometry.computeVertexNormals();
+					child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
 	            }
 
 	        });
@@ -104,6 +119,35 @@ function initMeshes(){
 			object4.translateX( -100 );
 
 			scene.add( object, object2, object3, object4 );
+			const objects = [];
+			objects.push(object, object2, object3, object4);
+
+			// function onMousemove(e){
+			// 	mouseVector.x = 2 * (e.clientX) - 1;
+			// 	mouseVector.y = 1 - 2 * ( e.clientY );
+			// 	raycaster.setFromCamera( mouseVector.clone(), camera );
+			// }
+			projector = new THREE.Projector();
+
+			// function onMousedown(e){
+			// 	console.log(object);
+			// 	event.preventDefault();
+		    //     var mouseX = (event.clientX / window.innerWidth)*2-1;
+		    //     var mouseY = -(event.clientY /window.innerHeight)*2+1;
+		    //     var vector = new THREE.Vector3( mouseX, mouseY, 0.5 );
+		    //     projector.unprojectVector( vector, camera );
+		    //     var raycaster = new THREE.Raycaster( camera.position, vector.sub( camera.position ).normalize() );
+			// 	var intersects = raycaster.intersectObjects( objects, true );
+			// 	console.log(intersects, mouseVector);
+			// 	console.log(intersects[0]);
+			// 	// intersects[0].object.scale.z = intersects[0].object.scale.z*2;
+			// 	console.log(intersects[0].object.scale.x);
+			// 	animate2(intersects[0].object);
+			// }
+			//
+			// // window.addEventListener( 'mousemove', onMousemove, false );
+			// window.addEventListener( 'mousedown', onMousedown, false );
+
 			var animate = function () {
 				requestAnimationFrame( animate );
 				object.rotation.x += 0.01;
@@ -114,11 +158,40 @@ function initMeshes(){
 				object3.rotation.y += 0.01;
 				object4.rotation.x += 0.01;
 				object4.rotation.y += 0.01;
+				renderer.render(scene, camera);
+			};
+
+			let size = 0.1;
+			let grow = true;
+				// console.log(object.children[0].geometry.morphAttributes);
+
+			var animate2 = function () {
+				requestAnimationFrame( animate2 );
+				if(grow){
+					size += 0.01;
+					object.scale.x += size/1000;
+					object.scale.y += size/1000;
+					object.scale.z += size/1000;
+				}else{
+					size -= 0.01;
+					object.scale.x -= size/1000;
+					object.scale.y -= size/1000;
+					object.scale.z -= size/1000;
+				}
+
+				if(size > 1){
+					grow = false;
+				}
+
+				if(size < 0){
+					grow=true;
+				}
+				// console.log(size, object.scale);
 
 				renderer.render(scene, camera);
 			};
-			animate();
 
+			animate();
 		},
 		// called when loading is in progresses
 		function ( xhr ) {
