@@ -1,4 +1,4 @@
-let camera, contols, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
+let camera, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
 console.log('works');
 function init(){
 	// Create Renderer
@@ -39,7 +39,6 @@ function init(){
 	// Create an omnidirectional point light
 	pointLight = new THREE.SpotLight( 0xffffff, 1.0 );
 	pointLight.castShadow = true;
-	pointLight.shadowDarkness = 1;
 	// Set Light position halfway between camera and mesh
 	pointLight.position.set( 60, 90, -100 );
 	scene.add(pointLight);
