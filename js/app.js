@@ -151,6 +151,7 @@ function onWindowResize() {
 function handleOrientation(){
 	controls.update();
 }
+
 window.addEventListener('deviceorientation', handleOrientation);
 window.addEventListener('resize', onWindowResize);
 
@@ -176,11 +177,11 @@ function geo_error() {
 }
 
 var geo_options = {
-  enableHighAccuracy: true,
-  maximumAge        : 0,
-  timeout           : 0
+  enableHighAccuracy: false,
+  maximumAge        : Infinity,
+  timeout           : Infinity
 };
 
 navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
-
 var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+// navigator.geolocation.clearWatch(wpid);
