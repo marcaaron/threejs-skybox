@@ -159,13 +159,10 @@ init();
 initMeshes();
 animate();
 
+
 function geo_success(position){
 	updateLocation(position.coords.latitude, position.coords.longitude);
 }
-
-window.onload = function() {
-  navigator.geolocation.getCurrentPosition(geo_success);
-};
 
 const userInfo = document.querySelector('.user-location');
 function updateLocation(lat,long){
@@ -173,15 +170,18 @@ function updateLocation(lat,long){
 }
 
 function geo_error() {
-  // alert("Sorry, no position available.");
+console.log("Sorry, no position available.");
 }
 
 var geo_options = {
-  enableHighAccuracy: false,
-  maximumAge        : Infinity,
+  enableHighAccuracy: true,
+  maximumAge        : 0,
   timeout           : Infinity
 };
 
-navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
+window.onload = function() {
+	navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
+};
+
 var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-// navigator.geolocation.clearWatch(wpid);
+console.log(navigator);
