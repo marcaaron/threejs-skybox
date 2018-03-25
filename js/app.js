@@ -1,3 +1,10 @@
+if (navigator.geolocation) {
+  alert('Geolocation is supported!');
+}
+else {
+  alert('Geolocation is not supported for this Browser/OS.');
+}
+
 let camera, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4;
 console.log('works');
 function init(){
