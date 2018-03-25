@@ -14,10 +14,10 @@ function init(){
 	scene = new THREE.Scene();
 
 	// Create Camera
-	const fov = 60;
+	const fov = 75;
 	const aspect = window.innerWidth / window.innerHeight;
-	const near = 0.1;
-	const far = 1000;
+	const near = 1;
+	const far = 1100;
 	camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 
 	// Crete device orientation controls
@@ -30,7 +30,6 @@ function init(){
 	// controls.enablePan = false;
 
 	console.log(controls);
-
 
 	// Add Ambient Light
 	const ambientLight = new THREE.AmbientLight( 0x555555, 1.0 );
@@ -140,6 +139,10 @@ function onWindowResize() {
 	renderer.setSize(window.innerWidth, window.innerHeight);
 }
 
+function handleOrientation(){
+	controls.update();
+}
+window.addEventListener('deviceorientation', handleOrientation);
 window.addEventListener('resize', onWindowResize);
 
 init();
