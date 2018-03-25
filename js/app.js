@@ -159,48 +159,49 @@ init();
 initMeshes();
 animate();
 
+// Location Services
 
-function geo_success(position){
-	updateLocation(position.coords.latitude, position.coords.longitude);
-}
-
-const userInfo = document.querySelector('.user-location');
-
-function updateLocation(lat,long){
-	userInfo.innerHTML = `User Position: ${lat} ${long}`;
-	if(latStart!==lat){
-		latitude = latStart - lat;
-		if(latitude && camera.position.z < 150 && camera.position.z > -150){
-			camera.position.z = latitude*10000000;
-		}
-	}
-	if(longStart!==long){
-		longitude = longStart-long;
-		if(longitude && camera.position.z < 150 && camera.position.z > -150){
-			camera.position.z = longitude*10000000;
-		}
-	}
-}
-
-function geo_error() {
-console.log("Sorry, no position available.");
-}
-
-var geo_options = {
-  enableHighAccuracy: true,
-  maximumAge        : 0,
-  timeout           : Infinity
-};
-let latStart, longStart;
-
-function geo_success_start(position){
-	latStart = position.coords.latitude;
-	longStart = position.coords.longitude;
-}
-
-window.onload = function() {
-	navigator.geolocation.getCurrentPosition(geo_success_start,geo_error,geo_options);
-};
-
-var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
-console.log(navigator);
+// function geo_success(position){
+// 	updateLocation(position.coords.latitude, position.coords.longitude);
+// }
+//
+// const userInfo = document.querySelector('.user-location');
+//
+// function updateLocation(lat,long){
+// 	userInfo.innerHTML = `User Position: ${lat} ${long}`;
+// 	if(latStart!==lat){
+// 		latitude = latStart - lat;
+// 		if(latitude && camera.position.z < 150 && camera.position.z > -150){
+// 			camera.position.z = latitude*10000000;
+// 		}
+// 	}
+// 	if(longStart!==long){
+// 		longitude = longStart-long;
+// 		if(longitude && camera.position.z < 150 && camera.position.z > -150){
+// 			camera.position.z = longitude*10000000;
+// 		}
+// 	}
+// }
+//
+// function geo_error() {
+// console.log("Sorry, no position available.");
+// }
+//
+// var geo_options = {
+//   enableHighAccuracy: true,
+//   maximumAge        : 0,
+//   timeout           : Infinity
+// };
+// let latStart, longStart;
+//
+// function geo_success_start(position){
+// 	latStart = position.coords.latitude;
+// 	longStart = position.coords.longitude;
+// }
+//
+// window.onload = function() {
+// 	navigator.geolocation.getCurrentPosition(geo_success_start,geo_error,geo_options);
+// };
+//
+// var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
+// console.log(navigator);
