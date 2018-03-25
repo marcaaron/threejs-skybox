@@ -76,8 +76,18 @@ function initMeshes(){
 	.load( [ 'front.png', 'back.png', 'up.png', 'down.png', 'right.png', 'left.png' ] );
 
 
-	var texture = new THREE.TextureLoader().load( 'textures/Stone_5_DiffuseMap.jpg' );
-	var materialTexture = new THREE.MeshBasicMaterial( { map: texture } );
+	var textureStone = new THREE.TextureLoader().load( 'textures/Stone_5_DiffuseMap.jpg' );
+	var opalTexture = new THREE.TextureLoader().load( 'textures/opal2.png' );
+	var whiteMaterial = new THREE.MeshLambertMaterial();
+	whiteMaterial.emissive = new THREE.Color(0x721ac0);
+	whiteMaterial.emissiveIntensity = 1;
+	opalTexture.wrapS = opalTexture.wrapT = THREE.RepeatWrapping;
+    opalTexture.offset.set( 0, 0 );
+	opalTexture.repeat.set(4,4);
+	var basicMaterial = new THREE.MeshBasicMaterial();
+	var stoneMaterial = new THREE.MeshBasicMaterial( { map: textureStone } );
+	var opalMaterial = new THREE.MeshBasicMaterial( { map: opalTexture } );
+
 	var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: scene.background } );
 	var loader = new THREE.OBJLoader();
 
@@ -96,28 +106,49 @@ function initMeshes(){
 			object.traverse(function (child) {
 
 	            if (child instanceof THREE.Mesh) {
-	                // child.material.map = texture;
-					child.material = material;
+	                child.material = whiteMaterial;
 			        child.castShadow = true;
 					child.receiveShadow = false;
 					console.log(child);
-					var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
-					geometry.computeFaceNormals();
-					geometry.mergeVertices();
-					geometry.computeVertexNormals(true);
-					child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
+					// var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
+					// geometry.computeFaceNormals();
+					// geometry.mergeVertices();
+					// geometry.computeVertexNormals(false);
+					// child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
 
 	            }
 
 	        });
 			const object2 = object.clone();
 			object2.translateZ( 200 );
+			object2.traverse(function(child){
+				if (child instanceof THREE.Mesh){
+					child.material = material;
+				}
+			});
 			const object3 = object.clone();
 			object3.translateZ( 100 );
 			object3.translateX( 100 );
+			for(let i=0; i<object3.children.length; i++){
+				object.children[i].material = object3.children[i].material.clone();
+			}
+			object3.children.forEach((child)=>{
+				child.material = stoneMaterial;
+				child.material.map = textureStone;
+			});
+
 			const object4 = object.clone();
 			object4.translateZ( 100 );
 			object4.translateX( -100 );
+
+			for(let i=0; i<object4.children.length; i++){
+				object.children[i].material = object4.children[i].material.clone();
+			}
+			object4.children.forEach((child)=>{
+				child.material = opalMaterial;
+				child.material.map = opalTexture;
+			});
+
 
 			scene.add( object, object2, object3, object4 );
 			const objects = [];
@@ -159,6 +190,7 @@ function initMeshes(){
 				object3.rotation.y += 0.01;
 				object4.rotation.x += 0.01;
 				object4.rotation.y += 0.01;
+
 				renderer.render(scene, camera);
 			};
 
