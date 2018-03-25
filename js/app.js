@@ -168,18 +168,17 @@ window.onload = function() {
 
 const userInfo = document.querySelector('.user-location');
 function updateLocation(lat,long){
-	console.log(lat,long);
-	userInfo.innerHTML = `User Positio: ${lat} ${long}`;
+	userInfo.innerHTML = `User Position: ${lat} ${long}`;
 }
 
 function geo_error() {
-  alert("Sorry, no position available.");
+  // alert("Sorry, no position available.");
 }
 
 var geo_options = {
   enableHighAccuracy: true,
-  maximumAge        : 30000,
-  timeout           : 27000
+  maximumAge        : 0,
+  timeout           : 0
 };
 
 navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
