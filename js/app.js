@@ -39,7 +39,7 @@ function init(){
 	// controls.enablePan = false;
 
 	console.log(controls);
-
+	console.log(camera);
 	// Add Ambient Light
 	const ambientLight = new THREE.AmbientLight( 0x555555, 1.0 );
 	scene.add(ambientLight);
@@ -165,8 +165,21 @@ function geo_success(position){
 }
 
 const userInfo = document.querySelector('.user-location');
+
 function updateLocation(lat,long){
 	userInfo.innerHTML = `User Position: ${lat} ${long}`;
+	if(latStart!==lat){
+		latitude = latStart - lat;
+		if(latitude && camera.position.z < 150 && camera.position.z > -150){
+			camera.position.z = latitude*5;
+		}
+	}
+	if(longStart!==long){
+		longitude = longStart-long;
+		if(longitude && camera.position.z < 150 && camera.position.z > -150){
+			camera.position.z = longitude*5;
+		}
+	}
 }
 
 function geo_error() {
@@ -178,9 +191,15 @@ var geo_options = {
   maximumAge        : 0,
   timeout           : Infinity
 };
+let latStart, longStart;
+
+function geo_success_start(position){
+	latStart = position.coords.latitude;
+	longStart = position.coords.longitude;
+}
 
 window.onload = function() {
-	navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
+	navigator.geolocation.getCurrentPosition(geo_success_start,geo_error,geo_options);
 };
 
 var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
