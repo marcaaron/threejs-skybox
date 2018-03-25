@@ -148,3 +148,26 @@ window.addEventListener('resize', onWindowResize);
 init();
 initMeshes();
 animate();
+const userInfo = document.querySelector('.user-location');
+function updateLocation(lat,long){
+	console.log(lat,long);
+	userInfo.innerHTML = `User Positio: ${lat} ${long}`;
+}
+
+function geo_error() {
+  alert("Sorry, no position available.");
+}
+
+var geo_options = {
+  enableHighAccuracy: true,
+  maximumAge        : 30000,
+  timeout           : 27000
+};
+
+function geo_success(position){
+	updateLocation(position.coords.latitude, position.coords.longitude);
+}
+
+navigator.geolocation.getCurrentPosition(geo_success,geo_error,geo_options);
+
+var wpid = navigator.geolocation.watchPosition(geo_success, geo_error, geo_options);
