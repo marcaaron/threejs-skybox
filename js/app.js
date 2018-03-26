@@ -210,7 +210,7 @@ function initMeshes(){
 				}, 1000/60);
 			};
 
-			animate();
+			// animate();
 
 			let size = 0.1;
 			let grow = true;
