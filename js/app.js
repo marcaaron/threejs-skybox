@@ -8,7 +8,7 @@
 
 
 let camera, projector, mouseVector, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4, raycaster;
-console.log('works');
+// console.log('works');
 function init(){
 	// Create Renderer
 	renderer = new THREE.WebGLRenderer();
@@ -39,8 +39,8 @@ function init(){
 	// controls.enablePan = false;
 	camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
-	console.log(controls);
-	console.log(camera);
+	// console.log(controls);
+	// console.log(camera);
 	// Add Ambient Light
 	const ambientLight = new THREE.AmbientLight( 0x555555, 1.0 );
 	scene.add(ambientLight);
@@ -124,7 +124,7 @@ function initMeshes(){
 					child.material = reflectMaterial;
 			        child.castShadow = true;
 					child.receiveShadow = false;
-					console.log(child);
+					// console.log(child);
 					// var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
 					// geometry.computeFaceNormals();
 					// geometry.mergeVertices();
@@ -168,7 +168,7 @@ function initMeshes(){
 			scene.add( object, object2, object3, object4 );
 			const objects = [];
 			objects.push(object, object2, object3, object4);
-			console.log(objects);
+			// console.log(objects);
 			// function onMousemove(e){
 			// 	mouseVector.x = 2 * (e.clientX) - 1;
 			// 	mouseVector.y = 1 - 2 * ( e.clientY );
@@ -195,8 +195,39 @@ function initMeshes(){
 			// // window.addEventListener( 'mousemove', onMousemove, false );
 			// window.addEventListener( 'mousedown', onMousedown, false );
 
-			var animate = function () {
-				requestAnimationFrame( animate );
+			// rAF fix via Addy Osmani
+
+			var limitLoop = function (fn, fps) {
+
+			    // Use var then = Date.now(); if you
+			    // don't care about targetting < IE9
+			    var then = new Date().getTime();
+
+			    // custom fps, otherwise fallback to 60
+			    fps = fps || 60;
+			    var interval = 1000 / fps;
+
+			    return (function loop(time){
+			        requestAnimationFrame(loop);
+
+			        // again, Date.now() if it's available
+			        var now = new Date().getTime();
+			        var delta = now - then;
+
+			        if (delta > interval) {
+			            // Update time
+			            // now - (delta % interval) is an improvement over just
+			            // using then = now, which can end up lowering overall fps
+			            then = now - (delta % interval);
+
+			            // call the fn
+			            fn();
+			        }
+			    }(0));
+			};
+
+
+			var fn = function () {
 				object.rotation.x += 0.01;
 				object.rotation.y += 0.01;
 				object2.rotation.x += 0.01;
@@ -205,13 +236,15 @@ function initMeshes(){
 				object3.rotation.y += 0.01;
 				object4.rotation.x += 0.01;
 				object4.rotation.y += 0.01;
-
 				renderer.render(scene, camera);
 			};
 
+			limitLoop(fn, 60);
+
+
 			let size = 0.1;
 			let grow = true;
-				// console.log(object.children[0].geometry.morphAttributes);
+			// console.log(object.children[0].geometry.morphAttributes);
 
 			var animate2 = function () {
 				requestAnimationFrame( animate2 );
