@@ -196,7 +196,7 @@ function initMeshes(){
 			// window.addEventListener( 'mousedown', onMousedown, false );
 
 			var animate = function () {
-				setTimeout(function(){
+				// setTimeout(function(){
 					object.rotation.x += 0.01;
 					object.rotation.y += 0.01;
 					object2.rotation.x += 0.01;
@@ -207,7 +207,7 @@ function initMeshes(){
 					object4.rotation.y += 0.01;
 					renderer.render(scene, camera);
 					requestAnimationFrame(animate);
-				}, 1000/60);
+				// }, 1000/60);
 			};
 //asdasd
 			// animate();
