@@ -5,6 +5,15 @@
 //   alert('Geolocation is not supported for this Browser/OS.');
 // }
 
+function isMobileDevice() {
+    if(typeof window.orientation !== "undefined" || navigator.userAgent.indexOf('IEMobile') !== -1){
+		console.log('device is mobile');
+		return true;
+	}else{
+		console.log('device is not mobile');
+		return false;
+	}
+};
 
 
 let camera, uniforms, projector, mouseVector, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4, raycaster;
@@ -29,14 +38,17 @@ function init(){
 	const far = 1100;
 	camera = new THREE.PerspectiveCamera( fov, aspect, near, far );
 
-	// Crete device orientation controls
-	controls = new THREE.DeviceOrientationControls( camera );
+	if(isMobileDevice()){
+		// Crete device orientation controls
+		controls = new THREE.DeviceOrientationControls( camera );
+	}else{
+		controls = new THREE.OrbitControls( camera );
+		controls.enableZoom = false;
+		controls.enablePan = false;
+	}
 
 	// Set the Camera Position
 	camera.position.set( 0, 0, 1 );
-	// const controls = new THREE.OrbitControls( camera );
-	// controls.enableZoom = false;
-	// controls.enablePan = false;
 	camera.lookAt( new THREE.Vector3( 0, 0, 0 ) );
 
 	// console.log(controls);
@@ -168,7 +180,7 @@ function initMeshes(){
 										child.geometry.attributes.displacement.array[i] = Math.abs(Math.random()*40);
 									}
 
-									console.log(child.geometry);
+									// console.log(child.geometry);
 
 							        child.castShadow = true;
 									child.receiveShadow = false;
