@@ -209,7 +209,7 @@ function initMeshes(){
 			// 		requestAnimationFrame(animate);
 			// 	}, 1000/60);
 			// };
-
+//asdasd
 			// animate();
 
 			let size = 0.1;
