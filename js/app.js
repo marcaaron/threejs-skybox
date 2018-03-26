@@ -74,21 +74,36 @@ function initMeshes(){
 	scene.background = new THREE.CubeTextureLoader()
 	.setPath( 'img/Skybox/' )
 	.load( [ 'front.png', 'back.png', 'up.png', 'down.png', 'right.png', 'left.png' ] );
-
+	scene.background.receiveShadow = true;
 
 	var textureStone = new THREE.TextureLoader().load( 'textures/Stone_5_DiffuseMap.jpg' );
-	var opalTexture = new THREE.TextureLoader().load( 'textures/opal2.png' );
-	var whiteMaterial = new THREE.MeshLambertMaterial();
-	whiteMaterial.emissive = new THREE.Color(0x721ac0);
-	whiteMaterial.emissiveIntensity = 1;
-	opalTexture.wrapS = opalTexture.wrapT = THREE.RepeatWrapping;
-    opalTexture.offset.set( 0, 0 );
-	opalTexture.repeat.set(4,4);
-	var basicMaterial = new THREE.MeshBasicMaterial();
-	var stoneMaterial = new THREE.MeshBasicMaterial( { map: textureStone } );
-	var opalMaterial = new THREE.MeshBasicMaterial( { map: opalTexture } );
+	var randomTexture = new THREE.TextureLoader().load( 'textures/random.png' );
+		randomTexture.wrapS = randomTexture.wrapT = THREE.RepeatWrapping;
+		randomTexture.offset.set( 0, 0 );
+		randomTexture.repeat.set(3,3);
 
-	var material = new THREE.MeshBasicMaterial( { color: 0xffffff, envMap: scene.background } );
+	var opalTexture = new THREE.TextureLoader().load( 'textures/opal3.png' );
+		opalTexture.wrapS = opalTexture.wrapT = THREE.RepeatWrapping;
+		opalTexture.offset.set( 0, 0 );
+		opalTexture.repeat.set(4,4);
+
+	var emissiveMaterial = new THREE.MeshLambertMaterial();
+		emissiveMaterial.emissive = new THREE.Color(0x721ac0);
+		emissiveMaterial.emissiveIntensity = 1;
+	var randomMaterial = new THREE.MeshLambertMaterial( { alphaMap: randomTexture, transparent: true } );
+
+	var stoneMaterial = new THREE.MeshPhongMaterial( { map: textureStone } );
+
+
+	var opalMaterial = new THREE.MeshLambertMaterial( { map: opalTexture } );
+
+	var reflectMaterial = new THREE.MeshBasicMaterial(
+		{
+			color: 0xffffff,
+			envMap: scene.background
+		}
+	);
+
 	var loader = new THREE.OBJLoader();
 
 	loader.load(
@@ -106,7 +121,7 @@ function initMeshes(){
 			object.traverse(function (child) {
 
 	            if (child instanceof THREE.Mesh) {
-	                child.material = whiteMaterial;
+					child.material = reflectMaterial;
 			        child.castShadow = true;
 					child.receiveShadow = false;
 					console.log(child);
@@ -121,20 +136,21 @@ function initMeshes(){
 	        });
 			const object2 = object.clone();
 			object2.translateZ( 200 );
-			object2.traverse(function(child){
-				if (child instanceof THREE.Mesh){
-					child.material = material;
-				}
+			for(let i=0; i<object2.children.length; i++){
+				object2.children[i].material = object.children[i].material.clone();
+			}
+			object2.children.forEach((child)=>{
+				child.material = stoneMaterial;
 			});
+
 			const object3 = object.clone();
 			object3.translateZ( 100 );
 			object3.translateX( 100 );
 			for(let i=0; i<object3.children.length; i++){
-				object.children[i].material = object3.children[i].material.clone();
+				object3.children[i].material = object.children[i].material.clone();
 			}
 			object3.children.forEach((child)=>{
-				child.material = stoneMaterial;
-				child.material.map = textureStone;
+				child.material = randomMaterial;
 			});
 
 			const object4 = object.clone();
@@ -142,18 +158,17 @@ function initMeshes(){
 			object4.translateX( -100 );
 
 			for(let i=0; i<object4.children.length; i++){
-				object.children[i].material = object4.children[i].material.clone();
+				object4.children[i].material = object.children[i].material.clone();
 			}
 			object4.children.forEach((child)=>{
 				child.material = opalMaterial;
-				child.material.map = opalTexture;
 			});
 
 
 			scene.add( object, object2, object3, object4 );
 			const objects = [];
 			objects.push(object, object2, object3, object4);
-
+			console.log(objects);
 			// function onMousemove(e){
 			// 	mouseVector.x = 2 * (e.clientX) - 1;
 			// 	mouseVector.y = 1 - 2 * ( e.clientY );
