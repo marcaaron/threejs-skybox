@@ -195,20 +195,20 @@ function initMeshes(){
 			// // window.addEventListener( 'mousemove', onMousemove, false );
 			// window.addEventListener( 'mousedown', onMousedown, false );
 
-			var animate = function () {
-				setTimeout(function(){
-					object.rotation.x += 0.01;
-					object.rotation.y += 0.01;
-					object2.rotation.x += 0.01;
-					object2.rotation.y += 0.01;
-					object3.rotation.x += 0.01;
-					object3.rotation.y += 0.01;
-					object4.rotation.x += 0.01;
-					object4.rotation.y += 0.01;
-					renderer.render(scene, camera);
-					requestAnimationFrame(animate);
-				}, 1000/60);
-			};
+			// var animate = function () {
+			// 	setTimeout(function(){
+			// 		object.rotation.x += 0.01;
+			// 		object.rotation.y += 0.01;
+			// 		object2.rotation.x += 0.01;
+			// 		object2.rotation.y += 0.01;
+			// 		object3.rotation.x += 0.01;
+			// 		object3.rotation.y += 0.01;
+			// 		object4.rotation.x += 0.01;
+			// 		object4.rotation.y += 0.01;
+			// 		renderer.render(scene, camera);
+			// 		requestAnimationFrame(animate);
+			// 	}, 1000/60);
+			// };
 
 			// animate();
 
