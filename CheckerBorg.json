@@ -1,0 +1,12 @@
+{
+  "id": 70,
+  "name": "CheckerBorg",
+  "fragment": "precision highp float;\nprecision highp int;\nvoid main() {\n    gl_FragColor = vec4( 0.5, 0.5, 0.5, 1.0 );\n}",
+  "vertex": "precision highp float;\nprecision highp int;\nuniform mat4 modelMatrix;\nuniform mat4 modelViewMatrix;\nuniform mat4 projectionMatrix;\nattribute vec3 position;\nvoid main() {\n    gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n}",
+  "uniforms": {},
+  "url": "http://shaderfrog.com/app/view/70",
+  "user": {
+    "username": "andrewray",
+    "url": "http://shaderfrog.com/app/profile/andrewray"
+  }
+}

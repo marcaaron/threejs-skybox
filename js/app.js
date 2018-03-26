@@ -7,7 +7,7 @@
 
 
 
-let camera, projector, mouseVector, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4, raycaster;
+let camera, uniforms, projector, mouseVector, controls, renderer, scene, pointLight, octaMesh1, octaMesh2, octaMesh3, octaMesh4, raycaster;
 // console.log('works');
 function init(){
 	// Create Renderer
@@ -82,6 +82,23 @@ function initMeshes(){
 		randomTexture.offset.set( 0, 0 );
 		randomTexture.repeat.set(3,3);
 
+
+
+	var vShader = document.getElementById( 'vertexShader' ).textContent;
+	var fShader = document.getElementById( 'fragmentShader' ).textContent;
+
+	uniforms = {
+		  amplitude: {
+		    type: 'f', // a float
+		    value: 1
+		  }
+		};
+	var glShaderMaterial = new THREE.ShaderMaterial( {
+					uniforms:uniforms,
+					vertexShader: vShader,
+					fragmentShader: fShader
+				} );
+
 	var opalTexture = new THREE.TextureLoader().load( 'textures/opal3.png' );
 		opalTexture.wrapS = opalTexture.wrapT = THREE.RepeatWrapping;
 		opalTexture.offset.set( 0, 0 );
@@ -120,16 +137,20 @@ function initMeshes(){
 			object.scale.z = 0.2;
 			object.traverse(function (child) {
 
+				// var sphere = new THREE.SphereGeometry(30,32,32);
+				// var verts = sphere.vertices;
+				// sphere = new THREE.BufferGeometry().fromGeometry( sphere );
+				// var displacement = new Float32Array(sphere.attributes.position.count);
+				// sphere.addAttribute("displacement", new THREE.BufferAttribute(displacement, 1));
+				// for(let i=0; i<displacement.length;i++){
+				// 	sphere.attributes.displacement.array[i] = Math.random()*10;
+				// }
+				// var mesh = new THREE.Mesh(sphere, glShaderMaterial);
+				// 	mesh.translateZ( -100 );
+				// scene.add(mesh);
 	            if (child instanceof THREE.Mesh) {
-					child.material = reflectMaterial;
-			        child.castShadow = true;
-					child.receiveShadow = false;
-					// console.log(child);
-					// var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
-					// geometry.computeFaceNormals();
-					// geometry.mergeVertices();
-					// geometry.computeVertexNormals(false);
-					// child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
+
+				child.material = reflectMaterial;
 
 	            }
 
@@ -140,7 +161,26 @@ function initMeshes(){
 				object2.children[i].material = object.children[i].material.clone();
 			}
 			object2.children.forEach((child)=>{
-				child.material = stoneMaterial;
+									child.material = glShaderMaterial;
+									var displacement = new Float32Array(child.geometry.attributes.position.count);
+									child.geometry.addAttribute("displacement", new THREE.BufferAttribute(displacement, 1));
+									for(let i=0; i<displacement.length;i++){
+										child.geometry.attributes.displacement.array[i] = Math.abs(Math.random()*40);
+									}
+
+									console.log(child.geometry);
+
+							        child.castShadow = true;
+									child.receiveShadow = false;
+									// console.log(child);
+									// var geometry = new THREE.Geometry().fromBufferGeometry( child.geometry );
+
+									// child.geometry = new THREE.BufferGeometry().fromGeometry( geometry );
+									// console.log('buffer',child.geometry);
+									//
+									// geometry.computeFaceNormals();
+									// geometry.mergeVertices();
+									// geometry.computeVertexNormals(false);
 			});
 
 			const object3 = object.clone();
@@ -194,9 +234,14 @@ function initMeshes(){
 			//
 			// // window.addEventListener( 'mousemove', onMousemove, false );
 			// window.addEventListener( 'mousedown', onMousedown, false );
+			var frame = 0;
 
 			var animate = function () {
-				// setTimeout(function(){
+				// console.log(uniforms.amplitude.value);
+				 	uniforms.amplitude.value = Math.sin(frame);
+
+				  // update the frame counter
+				    frame += 0.1;
 					object.rotation.x += 0.01;
 					object.rotation.y += 0.01;
 					object2.rotation.x += 0.01;
@@ -207,7 +252,6 @@ function initMeshes(){
 					object4.rotation.y += 0.01;
 					renderer.render(scene, camera);
 					requestAnimationFrame(animate);
-				// }, 1000/60);
 			};
 //asdasd
 			// animate();
